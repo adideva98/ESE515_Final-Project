@@ -1,27 +1,26 @@
-/ Sensor pins pin D6 LED output, pin A0 analog Input
-#define ledPin 6
-#define sensorPin A2
+#define MQ2pin 2
+
+float sensorValue;  //variable to store sensor value
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+	Serial.begin(9600); // sets the serial port to 9600
+	Serial.println("MQ2 warming up!");
+	delay(20000); // allow the MQ2 to warm up
 }
 
 void loop() {
-  Serial.print("Analog output: ");
-  Serial.println(readSensor());
-  delay(500);
-}
+	sensorValue = analogRead(MQ2pin); // read analog input pin 0
 
-//  This function returns the analog data to calling function
-int readSensor() {
-  unsigned int sensorValue = analogRead(sensorPin);  // Read the analog value from sensor
-  unsigned int outputValue = map(sensorValue, 0, 1023, 0, 255); // map the 10-bit data to 8-bit data
-  if (outputValue > 65)
-    analogWrite(ledPin, outputValue); // generate PWM signal
-  else
-    digitalWrite(ledPin, LOW);
-  return outputValue;             // Return analog moisture value
-}
+	Serial.print("Sensor Value: ");
+	Serial.println(sensorValue);
+	
+	delay(2000); // wait 2s for next reading
 
+  if(sensorValue > 700)
+  {
+    Serial.println("Smoke content is high. Only FireFighter vehicle can enter. Humans should not enter. ");
+  }
+  else{
+    Serial.println("Smoke content is not high. ");
+  }
+}
