@@ -124,8 +124,8 @@ void loop() {
   //Serial.print("Sensor value: ");
   //Serial.println(water_value);
   delay(1000);
-  //fire_value=digitalRead(2);
-  fire_value=0;
+  fire_value=digitalRead(2);
+  //fire_value=0;
   gas_value = analogRead(MQ2pin);
   DHT.read11(dht_apin);
   temperature= DHT.temperature;
