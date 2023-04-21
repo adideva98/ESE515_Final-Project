@@ -1,4 +1,4 @@
-#include <DFRobot_DHT11.h>
+//#include <DFRobot_DHT11.h>
 
 #include "dht.h"
 #define dht_apin A0 // Analog Pin sensor is connected to Arduino
@@ -6,7 +6,7 @@ dht DHT;
 #define POWER_PIN  7
 #define SIGNAL_PIN A5
 #define MQ2pin A2
-#define PUMP_PIN=11;
+#define PUMP_PIN A3
 
 float gas_value;
 int water_value = 0;
@@ -51,7 +51,7 @@ int check_smoke(){
 }
 
 int check_water(){
-  if(water_value<40){
+  if(water_value<300){
     //Serial.println("Water level too low, refill water");
     water_level_flag=0;
 
@@ -98,7 +98,7 @@ else if(fire_value==1 && 15<temperature < 20 && smoke_high==2){
 }
 else if(fire_value==1 && temperature >= 25 && smoke_high>=2){
   is_fire=0;
-  Serial.println("Temperature is high, there is a possibility of fire")
+  Serial.println("Temperature is high, there is a possibility of fire");
 }
 else if (fire_value==1 && temperature>=25 && smoke_high==1){
   is_fire=0;
@@ -108,8 +108,8 @@ else if(fire_value==0 && temperature>=25 && smoke_high==3){
   is_fire=1;
   Serial.println("Chemical fire , no smoke but fire present");
 }
-else if (fire_value==0 && temeprature<20 && smoke_high==3){
-  is_fire=1:
+else if (fire_value==0 && temperature<20 && smoke_high==3){
+  is_fire=1;
   Serial.println("Area has just caught fire");
 }
 else {
@@ -119,9 +119,6 @@ else {
 return is_fire;
 }
 void loop() {
-  if(watering==0){
-    digitalWrite(PUMP_PIN,LOW);
-  }
 
   digitalWrite(POWER_PIN, HIGH);  // turn the sensor ON
   delay(10);                      // wait 10 milliseconds
@@ -130,8 +127,8 @@ void loop() {
   //Serial.print("Sensor value: ");
   //Serial.println(water_value);
   delay(1000);
-  //fire_value=digitalRead(2);
-  fire_value=0;
+  fire_value=digitalRead(2);
+  // fire_value=0;
   gas_value = analogRead(MQ2pin);
   DHT.read11(dht_apin);
   temperature= DHT.temperature;
