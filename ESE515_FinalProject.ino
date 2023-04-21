@@ -16,6 +16,7 @@ float temperature = 0.0;
 float humidity = 0.0;
 bool is_fire=0;
 int smoke_high=0;
+bool watering=0;
 
 void setup() {
     Serial.begin(9600);
@@ -46,7 +47,7 @@ int check_smoke(){
   else{
     smoke_high=0;
   }
-  returm smoke_high;
+  return smoke_high;
 }
 
 int check_water(){
@@ -61,22 +62,24 @@ int check_water(){
   }
   return water_level_flag;
 }
-void start_water(){
+bool start_water(){
   if(is_fire==1 && water_level_flag==1)
   {
     Serial.println("Fire detected, have enough water, initiating watering");
     digitalWrite(PUMP_PIN, HIGH);   // send signal from pin 9 to circuit
-    delay(2000);                   // wait for 2 seconds
-    digitalWrite(PUMP_PIN, LOW);    // end signal
-    delay(2000); 
+    watering=1;
   }
   else if (is_fire==1 && water_level_flag==0)
   {
     Serial.println("Fire detected, but cannot water, paani de do");
     //Add led indicator logic
+    digitalWrite(PUMP_PIN,LOW);
+    watering=0;
   }
   else{
     Serial.println("No watering required");
+    digitalWrite(PUMP_PIN,LOW);
+    watering=0;
   }
 }
 bool check_fire(){
@@ -105,7 +108,7 @@ else if(fire_value==0 && temperature>=25 && smoke_high==3){
   is_fire=1;
   Serial.println("Chemical fire , no smoke but fire present");
 }
-else if (fire_value==0 && temeprature<20 && smoke_high=3){
+else if (fire_value==0 && temeprature<20 && smoke_high==3){
   is_fire=1:
   Serial.println("Area has just caught fire");
 }
@@ -116,6 +119,9 @@ else {
 return is_fire;
 }
 void loop() {
+  if(watering==0){
+    digitalWrite(PUMP_PIN,LOW);
+  }
 
   digitalWrite(POWER_PIN, HIGH);  // turn the sensor ON
   delay(10);                      // wait 10 milliseconds
@@ -124,20 +130,22 @@ void loop() {
   //Serial.print("Sensor value: ");
   //Serial.println(water_value);
   delay(1000);
-  fire_value=digitalRead(2);
-  //fire_value=0;
+  //fire_value=digitalRead(2);
+  fire_value=0;
   gas_value = analogRead(MQ2pin);
   DHT.read11(dht_apin);
   temperature= DHT.temperature;
   humidity = DHT.humidity;
-  Serial.println("Temp: " ,temperature);
-  Serial.println("Gas: ",gas_value);
-  Serial.println("Water Level: ",water_value);
-  Serial.println("Humidity: " ,humidity);
+  Serial.println(temperature);
+  Serial.println(gas_value);
+  Serial.println(water_value);
+  Serial.println(humidity);
   check_smoke();
   check_fire();
   check_water();
   start_water();
+  Serial.println(is_fire);
+  Serial.println(watering);
   delay(2000);
 
 }
