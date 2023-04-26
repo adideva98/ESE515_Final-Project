@@ -29,7 +29,6 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
     
-    lcd.begin(16, 2);
     Serial.begin(9600);
     delay(20000);
     pinMode(2, INPUT); //initialize Flame sensor output pin connected pin as input.
@@ -37,6 +36,7 @@ void setup() {
     pinMode(POWER_PIN, OUTPUT);   // configure D7 pin as an OUTPUT
     pinMode(PUMP_PIN, OUTPUT);
     digitalWrite(POWER_PIN, LOW);
+    lcd.begin(16, 2);
     
 
 }
@@ -133,17 +133,18 @@ void loop() {
   
   lcd.setCursor(0, 0);
   DHT.read11(dht_apin);
-  temperature= DHT.temperature;
-  humidity = DHT.humidity;
+  //temperature= DHT.temperature;
+  //humidity = DHT.humidity;
   lcd.print("Humidity= ");
   lcd.print(DHT.humidity);
-  lcd.print("%  ");
+  //lcd.print("%  ");
   lcd.setCursor(0, 1);
   lcd.print("Temp= ");
   lcd.print(DHT.temperature); 
-  lcd.print("C  ");  
+  //lcd.print("C  ");  
   delay(500);
   lcd.clear();
+  
   digitalWrite(POWER_PIN, HIGH);  // turn the sensor ON
   delay(10);                      // wait 10 milliseconds
   water_value = analogRead(SIGNAL_PIN); // read the analog value from sensor
@@ -155,28 +156,30 @@ void loop() {
   // fire_value=0;
   gas_value = analogRead(MQ2pin);
   
-  // delay(500);
-  // lcd.setCursor(0,0);
-  // lcd.print("Smoke Val= ");  
-  // lcd.print(gas_value);
-  // lcd.setCursor(0,1);
-  // lcd.print("Water Val= ");  
-  // lcd.print(water_value); 
-  // lcd.clear();      
+  delay(500);
+  lcd.setCursor(0,0);
+  lcd.print("Smoke Val= ");  
+  lcd.print(gas_value);
+  lcd.setCursor(0,1);
+  lcd.print("Water Val= ");  
+  lcd.print(water_value);
+  delay(500); 
+  lcd.clear();      
   // Serial.println(gas_value);
   // Serial.println(water_value);
   // Serial.println(humidity);
-  check_smoke();
-  check_fire();
-  check_water();
-  start_water();
   
-  Serial.println(gas_value);
-  Serial.println(water_value);
-  Serial.println(humidity);
-  Serial.println(temperature);  
-  Serial.println(is_fire);
-  Serial.println(watering);
+  // check_smoke();
+  // check_fire();
+  // check_water();
+  // start_water();
+  
+  // Serial.println(gas_value);
+  // Serial.println(water_value);
+  // Serial.println(humidity);
+  // Serial.println(temperature);  
+  // Serial.println(is_fire);
+  // Serial.println(watering);
   delay(2000);
 
 
