@@ -1,7 +1,7 @@
 //#include <DFRobot_DHT11.h>
 
 #include "dht.h"
-#define dht_apin A1 // Analog Pin sensor is connected to Arduino
+#define dht_apin A0 // Analog Pin sensor is connected to Arduino
 dht DHT;
 #define POWER_PIN  7
 #define SIGNAL_PIN A5
@@ -142,7 +142,7 @@ void loop() {
   lcd.print("Temp= ");
   lcd.print(DHT.temperature); 
   //lcd.print("C  ");  
-  delay(500);
+  delay(1000);
   lcd.clear();
   
   digitalWrite(POWER_PIN, HIGH);  // turn the sensor ON
@@ -152,7 +152,7 @@ void loop() {
   //Serial.print("Sensor value: ");
   //Serial.println(water_value);
   delay(1000);
-  fire_value=digitalRead(2);
+  fire_value=digitalRead(6);
   // fire_value=0;
   gas_value = analogRead(MQ2pin);
   
@@ -161,20 +161,33 @@ void loop() {
   lcd.print("Smoke Val= ");  
   lcd.print(gas_value);
   lcd.setCursor(0,1);
-  lcd.print("Water Val= ");  
+  lcd.print("Water Val= ");     
   lcd.print(water_value);
-  delay(500); 
+  delay(1000); 
   lcd.clear();      
   // Serial.println(gas_value);
   // Serial.println(water_value);
   // Serial.println(humidity);
   
-  // check_smoke();
-  // check_fire();
-  // check_water();
-  // start_water();
+  check_smoke();
+  check_fire();
+  check_water();
+  start_water();
+  delay(500);
+  lcd.setCursor(0,0);
+  if (is_fire==1)
+  {
+    lcd.print("Fire! Fire! ");    
+  }
+  else
+  {
+    lcd.print("No fire. Safe!");
+  }
+
+  delay(1000); 
+  lcd.clear();   
   
-  // Serial.println(gas_value);
+  // Serial.println(gas_  value);
   // Serial.println(water_value);
   // Serial.println(humidity);
   // Serial.println(temperature);  
