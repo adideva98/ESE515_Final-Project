@@ -212,6 +212,6 @@ void loop() {
   gasfeed->save(gas_value);
   waterfeed->save(water_value);
   firefeed->save(is_fire);
-  delay(5000);   
+  delay(2000);   
   
 }
